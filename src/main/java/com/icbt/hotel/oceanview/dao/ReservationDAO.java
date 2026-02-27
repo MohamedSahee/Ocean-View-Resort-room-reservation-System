@@ -9,9 +9,6 @@ import java.util.List;
 
 public class ReservationDAO {
 
-    // ----------------------------
-    // CREATE
-    // ----------------------------
     public boolean addReservation(Reservation r) {
         String sql = "INSERT INTO reservations " +
                 "(id, name, address, contact, email, room, checkin, checkout, requests, guests, payment) " +
@@ -35,7 +32,7 @@ public class ReservationDAO {
             return ps.executeUpdate() > 0;
 
         } catch (SQLIntegrityConstraintViolationException dup) {
-            // Duplicate primary key (id already exists)
+            // ID duplicate
             return false;
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,9 +40,6 @@ public class ReservationDAO {
         }
     }
 
-    // ----------------------------
-    // READ
-    // ----------------------------
     public Reservation getReservationById(int id) {
         String sql = "SELECT * FROM reservations WHERE id = ?";
         try (Connection con = DBConnection.getConnection();
@@ -55,16 +49,12 @@ public class ReservationDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return mapReservation(rs);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    // ----------------------------
-    // UPDATE
-    // ----------------------------
     public boolean updateReservation(Reservation r) {
         String sql = "UPDATE reservations SET " +
                 "name=?, address=?, contact=?, email=?, room=?, checkin=?, checkout=?, requests=?, guests=?, payment=? " +
@@ -93,9 +83,6 @@ public class ReservationDAO {
         }
     }
 
-    // ----------------------------
-    // DELETE
-    // ----------------------------
     public boolean deleteReservation(int id) {
         String sql = "DELETE FROM reservations WHERE id=?";
         try (Connection con = DBConnection.getConnection();
@@ -110,9 +97,6 @@ public class ReservationDAO {
         }
     }
 
-    // ----------------------------
-    // SEARCH
-    // ----------------------------
     public List<Reservation> searchByName(String name) {
         List<Reservation> list = new ArrayList<>();
         String sql = "SELECT * FROM reservations WHERE name LIKE ? ORDER BY id DESC";
@@ -120,11 +104,10 @@ public class ReservationDAO {
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, "%" + (name == null ? "" : name.trim()) + "%");
+            ps.setString(1, "%" + name.trim() + "%");
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) list.add(mapReservation(rs));
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -138,67 +121,25 @@ public class ReservationDAO {
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, "%" + (contact == null ? "" : contact.trim()) + "%");
+            ps.setString(1, "%" + contact.trim() + "%");
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) list.add(mapReservation(rs));
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
         return list;
     }
 
-    // ----------------------------
-    // DASHBOARD METHODS ✅
-    // ----------------------------
-
-    /** Total reservations count (for dashboard card) */
-    public int countAllReservations() {
-        String sql = "SELECT COUNT(*) FROM reservations";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            return rs.next() ? rs.getInt(1) : 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    /**
-     * Active guests today (for dashboard card)
-     * Guests that are currently staying:
-     * checkin <= today AND checkout > today
-     */
-    public int countActiveGuests() {
-        String sql = "SELECT COUNT(*) FROM reservations " +
-                "WHERE checkin <= CURDATE() AND checkout > CURDATE()";
-
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            return rs.next() ? rs.getInt(1) : 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    // ----------------------------
-    // RECENT RESERVATIONS (for dashboard list)
-    // ----------------------------
+    // ✅ recent list (works even if created_at does NOT exist)
     public List<Reservation> getRecentReservations(int limit) {
         List<Reservation> list = new ArrayList<>();
 
+        String sql;
         try (Connection con = DBConnection.getConnection()) {
 
             boolean hasCreatedAt = hasColumn(con, "reservations", "created_at");
-            String sql = hasCreatedAt
+            sql = hasCreatedAt
                     ? "SELECT * FROM reservations ORDER BY created_at DESC LIMIT ?"
                     : "SELECT * FROM reservations ORDER BY id DESC LIMIT ?";
 
@@ -216,9 +157,6 @@ public class ReservationDAO {
         return list;
     }
 
-    // ----------------------------
-    // HELPERS
-    // ----------------------------
     private boolean hasColumn(Connection con, String table, String column) {
         try {
             DatabaseMetaData md = con.getMetaData();
