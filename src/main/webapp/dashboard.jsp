@@ -170,7 +170,7 @@
         </a>
       </li>
       <li>
-        <a href="logout" class="flex items-center p-3 text-red-200 hover:text-red-100 hover:bg-red-500/20 rounded-lg transition duration-300 mt-8">
+        <a href="logout.jsp" class="flex items-center p-3 text-red-200 hover:text-red-100 hover:bg-red-500/20 rounded-lg transition duration-300 mt-8">
           <i class="fas fa-sign-out-alt mr-3"></i>
           Logout
         </a>
