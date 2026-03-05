@@ -128,7 +128,7 @@
 
 <% if ("1".equals(success)) { %>
 <div class="max-w-6xl mx-auto mb-6 p-4 rounded-xl bg-green-500/20 border border-green-400 text-green-100">
-    ✅ Reservation saved successfully!
+    ✅ Reservation saved successfully!..
 </div>
 <% } %>
 
