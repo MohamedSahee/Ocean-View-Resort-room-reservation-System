@@ -154,7 +154,7 @@
         "Thank you for using our billing system. Your session has been safely terminated. For security reasons, please close your browser if you're using a shared computer."
     </div>
 
-    <a href="index.jsp" class="btn">🔐 Login Again</a>
+    <a href="login.jsp" class="btn">🔐 Login Again</a>
 
     <div class="footer">
         © 2025 Online Billing System. All rights reserved.<br>
