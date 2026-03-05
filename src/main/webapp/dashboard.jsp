@@ -216,7 +216,7 @@
           <i class="fas fa-bed text-white text-2xl"></i>
         </div>
         <div>
-          <h3 class="text-blue-100 text-sm font-medium">Total E Reservations</h3>
+          <h3 class="text-blue-100 text-sm font-medium">Total Reservations</h3>
           <p class="text-2xl font-bold text-white">42</p>
         </div>
       </div>
