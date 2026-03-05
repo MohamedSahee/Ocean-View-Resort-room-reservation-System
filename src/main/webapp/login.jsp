@@ -195,7 +195,7 @@
 
     <!-- Footer -->
     <p class="text-center text-blue-100 text-sm mt-8">
-        &copy; 2024 Ocean View Resort. All rights reserved.
+        &copy; 2026 Ocean View Resort. All rights reserved.
     </p>
 </div>
 
