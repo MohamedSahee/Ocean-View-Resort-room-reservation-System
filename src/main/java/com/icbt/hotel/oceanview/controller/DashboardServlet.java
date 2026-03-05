@@ -1,4 +1,4 @@
-package com.icbt.hotel.oceanview.controller; ;
+package com.icbt.hotel.oceanview.controller;
 
 public class DashboardServlet {
 }
